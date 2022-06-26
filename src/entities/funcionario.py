@@ -46,7 +46,6 @@ class Funcionario():
         )
 
         cursor.execute(query, [self.cargo_id])
-        print(cursor)
         for (codigo, descricao, salario_base, comissao) in cursor:
             cargo = Cargo(codigo, descricao, salario_base, comissao)
             

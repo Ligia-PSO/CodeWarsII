@@ -1,9 +1,9 @@
 class Cargo():
     def __init__(self, codigo: str, descricao: str, salario_base: float, comissao: float):
-        self.__codigo: str = codigo
-        self.__descricao: str = descricao
-        self.__salario_base: str = salario_base
-        self.__comissao: str = comissao
+        self.__codigo = codigo
+        self.__descricao = descricao
+        self.__salario_base = salario_base
+        self.__comissao = comissao
         
     
     @property

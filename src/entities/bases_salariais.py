@@ -23,7 +23,7 @@ def INSS(funcionario:Funcionario)->float:
                 recolher+=(salario-intervalo[0])*aliquota
             break
 
-    return recolher
+    return recolher,aliquota
     
 
 def IRRF(funcionario:Funcionario)->float:
@@ -41,4 +41,4 @@ def IRRF(funcionario:Funcionario)->float:
         if intervalo[0]<salario<intervalo[1]:#fora da faixa do imposto de renda
             imposto=(salario-INSS(funcionario))*aliquota-deducao
     
-    return imposto
+    return imposto,aliquota

@@ -1,9 +1,10 @@
-from src.entities.funcionario import Funcionario
+
 from xml.dom import NotFoundErr
 import mysql.connector
 import sys
 sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
-
+from src.entities.funcionario import Funcionario
+from src.exception.funcionario_not_found import FuncionarioNotFoundError
 
 class CadastroFuncionario():
 
@@ -34,6 +35,17 @@ class CadastroFuncionario():
 
         cursor.execute(adiciona_funcionario, dados)
 
+################
+#        cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
+
+#        for (nome, cpf, data_admissao, cargo_id, comissao) in cursor:
+
+#            if cpf in cpf_list:
+#                raise CPFFoundError("CPF já cadastrado.")
+#            else:
+                
+###################
+
         cnx.commit()
         cursor.close()
         cnx.close()
@@ -46,16 +58,25 @@ class CadastroFuncionario():
         cursor = cnx.cursor()
 
         query = (
-            '''SELECT nome, CPF, data_admissao, cargo_id, comissao 
-        FROM funcionario 
-        WHERE CPF=%s'''
-        )
+            '''SELECT  CPF FROM xpto_alimentos.funcionario ''')
 
-        cursor.execute(query, [cpf])
+        cursor.execute(query)
 
-        for (nome, cpf, data_admissao, cargo_id, comissao) in cursor:
-            funcionario = Funcionario(
-                nome, cpf, data_admissao, cargo_id, comissao)
+        cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
+        cursor.close()
+        cursor = cnx.cursor()
+
+        if cpf in cpf_list:
+            query = ('''SELECT nome, CPF, data_admissao, cargo_id, comissao 
+            FROM funcionario WHERE CPF=%s''')
+            cursor.execute(query, [cpf])
+            for (nome, cpf, data_admissao, cargo_id, comissao) in cursor:
+                funcionario = Funcionario(
+                    nome, cpf, data_admissao, cargo_id, comissao)
+        else:
+            cursor.close()
+            cnx.close()
+            raise FuncionarioNotFoundError("CPF não encontrado.")
 
         cursor.close()
         cnx.close()
@@ -72,8 +93,16 @@ class CadastroFuncionario():
             '''DELETE FROM funcionario 
         WHERE CPF = %s'''
         )
-
-        cursor.execute(deleta_funcionario, (cpf,))
+        cursor.execute('''SELECT CPF 
+        FROM xpto_alimentos.funcionario''')
+        cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
+        
+        if cpf in cpf_list:
+            cursor.execute(deleta_funcionario, (cpf,))    
+        else:
+            cursor.close()
+            cnx.close()
+            raise FuncionarioNotFoundError("CPF não encontrado.")
 
         cnx.commit()
         cursor.close()
@@ -133,14 +162,25 @@ class CadastroFuncionario():
 
         cursor.execute(lista_funcionarios)
 
-        aux = cursor.fetchall()
+##############################
 
-        print("    ".join(['   Matricula   ', 'Nome         ',
-              'CPF', "Data de admissao", "Cargo id ", "Comissao"]))
+        cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
 
-        for i in range(len(aux)):
-            print("  ", "    ".join(map(str, aux[i])))
+        
 
+        if len(cpf_list) == 0:
+            raise FuncionarioNotFoundError("Nao tem funcionarios cadastrados.")
+
+        else:
+            aux = cursor.fetchall()
+            print("    ".join(['   Matricula   ', 'Nome         ',
+            'CPF', "Data de admissao", "Cargo id ", "Comissao"]))
+
+            for i in range(len(aux)):
+                print("  ", "    ".join(map(str, aux[i])))
+
+#############################
+    
         cursor.close()
         cnx.close()
         return aux

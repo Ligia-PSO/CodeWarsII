@@ -2,7 +2,7 @@ from src.entities.bases_salariais import INSS, IRRF
 from src.business.cadastro_funcionario import CadastroFuncionario
 from src.entities.funcionario import Funcionario
 
-class Holerites():
+class Holerite():
     def __init__(self, cpf: str, mes: str, faltas: int):
         self.__mes_referencia = mes
         self.__cpf = cpf
@@ -11,8 +11,8 @@ class Holerites():
         # -----------Gerado consultando base de dados e por calculo----------
         self.__comissao: float = self.funcionario().cargo().comissao
         self.__salario_base: float = self.funcionario().cargo().salario_base
-        self.__inss = INSS(self.funcionario())
-        self.__irrf = IRRF(self.funcionario())
+        # self.__inss = INSS(self.funcionario())[0]
+        # self.__irrf = IRRF(self.funcionario())[0]
 
     def funcionario(self) -> Funcionario:
         cadastro = CadastroFuncionario()
@@ -34,14 +34,6 @@ class Holerites():
     @property
     def faltas(self) -> int:
         return self.__faltas
-
-    @property
-    def inss(self) -> float:
-        return self.__inss
-
-    @property
-    def irrf(self) -> float:
-        return self.__irrf
 
     @property
     def cpf(self) -> float:
