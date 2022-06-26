@@ -1,17 +1,17 @@
 class Funcionario():
-    def __init__(self, matricula: str, nome: str, CPF: str, data_admissao: str, comissao: bool)->None:
-        self.__matricula: str = matricula
+    def __init__(self, nome: str, CPF: str, data_admissao: str, cargo_id: str,comissao: str)->None:
         self.__nome: str = nome
         self.__CPF: str = CPF
         self.__data_admissao: str = data_admissao
-        self.__comissao: bool = comissao
+        self.__comissao: str = comissao
+        self.__cargo_id: str=cargo_id
 
     @property
     def nome(self) -> str:
         return self.__nome
 
     @property
-    def CPF(self) -> int:
+    def CPF(self) -> str:
         return self.__CPF
 
     @property
@@ -19,5 +19,9 @@ class Funcionario():
         return self.__data_admissao
     
     @property
-    def comissao(self) -> float:
+    def comissao(self) -> str:
         return self.__comissao
+
+    @property
+    def cargo_id(self) -> str:
+        return self.__cargo_id

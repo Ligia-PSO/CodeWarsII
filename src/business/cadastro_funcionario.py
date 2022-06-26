@@ -1,30 +1,148 @@
-from msilib.schema import Error
-from typing import List
+from asyncio.windows_events import NULL
 from xml.dom import NotFoundErr
+import mysql.connector
+import sys
+sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
 from src.entities.funcionario import Funcionario
 
 class CadastroFuncionario():
-    def __init__(self) -> None:
-            self.__funcionarios: List[Funcionario] = []
+    def __init__(self):
+        self.__campos:list =['nome','CPF','data_admissao','cargo_id','comissao']
 
-    def incluir(self, funcionario:Funcionario):
-        self.__funcionarios.append(funcionario)
+    def inserir(self, funcionario:Funcionario):
+        cnx = mysql.connector.connect(user='root', password='throwaway11',
+                              host='127.0.0.1',
+                              database='xpto_alimentos')
+                              
+        cursor = cnx.cursor()
+        
+        adiciona_funcionario = (
+            """INSERT INTO funcionario
+            (nome,CPF,data_admissao,cargo_id,comissao ) 
+            VALUES ( %(nome)s, %(CPF)s, %(data_admissao)s, %(cargo_id)s, %(comissao)s)"""
+        )
 
-    def consultar(self, matricula: str) -> Funcionario:
-        entidade = list(filter(lambda x: x.matricula == matricula, self.__funcionarios))
-        if entidade==[]:
-            raise NotFoundErr("Matrícula não encontrada.")
+        dados = {
+            "nome": funcionario.nome,
+            "CPF": funcionario.CPF,
+            "data_admissao": funcionario.data_admissao,
+            "cargo_id": funcionario.cargo_id,
+            "comissao": funcionario.comissao
+        }
+
+        cursor.execute(adiciona_funcionario, dados)
+
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+        
+
+    def consultar(self,cpf:str) -> Funcionario:
+        cnx = mysql.connector.connect(user='root', password='throwaway11',
+                              host='127.0.0.1',
+                              database='xpto_alimentos')
+                              
+        cursor = cnx.cursor()
+
+        query = (
+        '''SELECT nome, CPF, data_admissao, cargo_id, comissao 
+        FROM funcionario 
+        WHERE CPF=%s'''
+        )
+
+        cursor.execute(query, [cpf])
+
+        for (nome, cpf, data_admissao, cargo_id, comissao) in cursor:
+            funcionario = Funcionario(nome, cpf, data_admissao, cargo_id, comissao)
+            
+        cursor.close()
+        cnx.close()
+        
+        return funcionario
+
+        
+    def excluir(self, cpf: str) -> None:
+        cnx = mysql.connector.connect(user='root', password='throwaway11',
+                              host='127.0.0.1',
+                              database='xpto_alimentos')
+        cursor = cnx.cursor()
+
+        deleta_funcionario = (
+        '''DELETE FROM funcionario 
+        WHERE CPF = %s'''
+        )
+
+        cursor.execute(deleta_funcionario, (cpf,))
+
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+        
+
+    def alterar_cadastro(self, cpf: str) -> None:
+        cnx = mysql.connector.connect(user='root', password='throwaway11',
+                              host='127.0.0.1',
+                              database='xpto_alimentos')
+        cursor = cnx.cursor()
+
+        
+        
+        #Listagem de cpf no database
+        cursor.execute('''SELECT CPF 
+        FROM xpto_alimentos.funcionario''')
+        cpf_list = list(map(lambda x:x[0],cursor.fetchall()))
+
+        if cpf in cpf_list:
+            for i in range(len(self.__campos)):
+                print(f"{i}----{self.__campos[i]}")
+
+            index=int(input('Informe o codigo do campo a ser alterado:'))
+            
+            if index not in range(len(self.__campos)):
+                print('codigo de campo nao existe')
+            else:
+                alteraçao=input('Nova info:\n')
+
+            if alteraçao==None or alteraçao.isspace() or alteraçao=='':
+                print('novo dado nao pode ser vazio')
+            else:
+                if "s"==input(f'Deseja alterar {self.__campos[index]} para "{alteraçao}"?(s/n) '):
+                    sql = "UPDATE funcionario SET "+self.__campos[index]+" = %s WHERE CPF = %s"
+                    cursor.execute(sql,(alteraçao,cpf))
+                    cnx.commit()
+                    print("alteracao feita")
         else:
-            return entidade
+            raise NotFoundErr #fazer um erro customizado de cpfnotfound
 
-    def excluir(self, matricula: str) -> None:
-        entidade = self.consultar(matricula)
-        self.__funcionarios.remove(entidade)
+        
+        cursor.close()
+        cnx.close()
 
-    def alterar_cadastro(self, matricula: str) -> None:
-        entidade = self.consultar(matricula)
-        self.__funcionarios.remove(entidade)
-        self.__funcionarios.incluir(entidade)
+    def listar_todos(self)->list:
 
-    def listar_todos(self) -> List[Funcionario]:
-        return self.__funcionarios
+        cnx = mysql.connector.connect(user='root', password='throwaway11',
+                              host='127.0.0.1',
+                              database='xpto_alimentos')
+        cursor = cnx.cursor()
+
+        lista_funcionarios = (
+        '''SELECT * 
+        FROM xpto_alimentos.funcionario'''
+        )
+
+        #criar erro se nao ha funcionarios cadastrados
+
+        cursor.execute(lista_funcionarios)
+
+        aux = cursor.fetchall()
+        
+        print ("    ".join(['   Matricula   ','Nome         ','CPF',"Data de admissao","Cargo id ","Comissao"]))
+
+        for i in range(len(aux)):
+            print("  ","    ".join(map(str,aux[i])))
+
+        cursor.close()
+        cnx.close()
+        return aux
+
+    
