@@ -1,5 +1,11 @@
 
-def INSS(salario:float)->float:
+import sys
+sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
+from src.entities.funcionario import Funcionario
+
+def INSS(funcionario:Funcionario)->float:
+    salario=funcionario.cargo().salario_base
+
     faixas_INSS={(0,1212):0.075,
                     (1212.01,2427.35):0.09,
                     (2427.36,3641.03):0.12,
@@ -20,7 +26,9 @@ def INSS(salario:float)->float:
     return recolher
     
 
-def IRRF(salario:float)->float:
+def IRRF(funcionario:Funcionario)->float:
+    salario=funcionario.cargo().salario_base
+
     faixas_IRRF={(0,1903.98):(0,0),
                 (1903.99,2826.65):(0.075,142.8),
                 (2826.66,3751.05):(0.15,354.80),
@@ -31,6 +39,6 @@ def IRRF(salario:float)->float:
     for intervalo,(aliquota,deducao) in faixas_IRRF.items():
 
         if intervalo[0]<salario<intervalo[1]:#fora da faixa do imposto de renda
-            imposto=(salario-INSS(salario))*aliquota-deducao
+            imposto=(salario-INSS(funcionario))*aliquota-deducao
     
     return imposto

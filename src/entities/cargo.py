@@ -21,3 +21,4 @@ class Cargo():
     @property
     def comissao(self) -> float:
         return self.__comissao
+    
