@@ -1,10 +1,11 @@
 
 import sys
+sys.path.append()
 sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
 from src.entities.funcionario import Funcionario
 from src.business.cadastro_funcionario import CadastroFuncionario
 
-
+#precisa ser mudado para iplementação do pytest ou unittest
 
 cadastro = CadastroFuncionario()
 

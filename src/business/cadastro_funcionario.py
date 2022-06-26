@@ -112,7 +112,7 @@ class CadastroFuncionario():
                     cnx.commit()
                     print("alteracao feita")
         else:
-            raise NotFoundErr #fazer um erro customizado de cpfnotfound
+            raise NotFoundErr #fazer um erro customizado de cpfnotfound(excecao)
 
         
         cursor.close()
@@ -130,7 +130,7 @@ class CadastroFuncionario():
         FROM xpto_alimentos.funcionario'''
         )
 
-        #criar erro se nao ha funcionarios cadastrados
+        #criar erro se nao ha funcionarios cadastrados(excecao)
 
         cursor.execute(lista_funcionarios)
 
