@@ -169,6 +169,8 @@ class CadastroFuncionario():
         
 
         if len(cpf_list) == 0:
+            cursor.close()
+            cnx.close()
             raise FuncionarioNotFoundError("Nao tem funcionarios cadastrados.")
 
         else:
