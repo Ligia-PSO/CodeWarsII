@@ -5,7 +5,6 @@ class Cargo():
         self.__salario_base = salario_base
         self.__comissao = comissao
         
-    
     @property
     def codigo(self) -> str:
         return self.__codigo

@@ -3,7 +3,7 @@ from src.business.cadastro_funcionario import CadastroFuncionario
 from src.entities.funcionario import Funcionario
 
 class Holerite():
-    def __init__(self, cpf: str, mes: str, faltas: int):
+    def __init__(self, cpf: str, mes: int, faltas: int=0):
         self.__mes_referencia = mes
         self.__cpf = cpf
         self.__faltas = faltas
@@ -20,7 +20,7 @@ class Holerite():
         return funcionario
 
     @property
-    def mes_referencia(self) -> str:
+    def mes_referencia(self) -> int:
         return self.__mes_referencia
 
     @property

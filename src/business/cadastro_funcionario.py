@@ -1,10 +1,10 @@
-
-from xml.dom import NotFoundErr
-import mysql.connector
+from mysql.connector import connect
 import sys
 sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
 from src.entities.funcionario import Funcionario
 from src.exception.funcionario_not_found import FuncionarioNotFoundError
+from mysql.connector.errors import IntegrityError,DatabaseError
+from src.business.conectar_SQL import Conectar_SQL
 
 class CadastroFuncionario():
 
@@ -13,7 +13,7 @@ class CadastroFuncionario():
                                'data_admissao', 'cargo_id', 'comissao']
 
     def inserir(self, funcionario: Funcionario):
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
+        cnx = connect(user='root', password='throwaway11',
                                       host='127.0.0.1',
                                       database='xpto_alimentos')
 
@@ -33,30 +33,29 @@ class CadastroFuncionario():
             "comissao": funcionario.comissao
         }
 
-        cursor.execute(adiciona_funcionario, dados)
+        campos_info=[i for i in dados.values()]
 
-################
-#        cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
+       
 
-#        for (nome, cpf, data_admissao, cargo_id, comissao) in cursor:
+        try:
+            cursor.execute(adiciona_funcionario, dados)
 
-#            if cpf in cpf_list:
-#                raise CPFFoundError("CPF já cadastrado.")
-#            else:
-                
-###################
+        except IntegrityError:
+            print("CPF já cadastrado")
+        except DatabaseError:
+            if '' in campos_info or None in campos_info:
+                print('Campo do funcionario nao pode ser nulo ou vazio')
+            print('Formatacao de campo incorreta vazia nula ou tamanho errado')
 
         cnx.commit()
         cursor.close()
         cnx.close()
 
     def consultar(self, cpf: str) -> Funcionario:
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
+        cnx = connect(user='root', password='throwaway11',
                                       host='127.0.0.1',
                                       database='xpto_alimentos')
-
         cursor = cnx.cursor()
-
         query = (
             '''SELECT  CPF FROM xpto_alimentos.funcionario ''')
 
@@ -67,12 +66,12 @@ class CadastroFuncionario():
         cursor = cnx.cursor()
 
         if cpf in cpf_list:
-            query = ('''SELECT nome, CPF, data_admissao, cargo_id, comissao 
+            query = ('''SELECT matricula,nome, CPF, data_admissao, cargo_id, comissao 
             FROM funcionario WHERE CPF=%s''')
             cursor.execute(query, [cpf])
-            for (nome, cpf, data_admissao, cargo_id, comissao) in cursor:
+            for (matricula,nome, cpf, data_admissao, cargo_id, comissao) in cursor:
                 funcionario = Funcionario(
-                    nome, cpf, data_admissao, cargo_id, comissao)
+                    nome, cpf, data_admissao, cargo_id, comissao,matricula)
         else:
             cursor.close()
             cnx.close()
@@ -84,7 +83,7 @@ class CadastroFuncionario():
         return funcionario
 
     def excluir(self, cpf: str) -> None:
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
+        cnx = connect(user='root', password='throwaway11',
                                       host='127.0.0.1',
                                       database='xpto_alimentos')
         cursor = cnx.cursor()
@@ -109,7 +108,7 @@ class CadastroFuncionario():
         cnx.close()
 
     def alterar_cadastro(self, cpf: str) -> None:
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
+        cnx = connect(user='root', password='throwaway11',
                                       host='127.0.0.1',
                                       database='xpto_alimentos')
         cursor = cnx.cursor()
@@ -140,15 +139,15 @@ class CadastroFuncionario():
                     cnx.commit()
                     print("alteracao feita")
         else:
-            # fazer um erro customizado de cpfnotfound(excecao)
-            raise NotFoundErr
+            raise FuncionarioNotFoundError("CPF não encontrado.")
+
 
         cursor.close()
         cnx.close()
 
     def listar_todos(self) -> list:
 
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
+        cnx = connect(user='root', password='throwaway11',
                                       host='127.0.0.1',
                                       database='xpto_alimentos')
         cursor = cnx.cursor()
@@ -157,16 +156,8 @@ class CadastroFuncionario():
             '''SELECT * 
         FROM xpto_alimentos.funcionario'''
         )
-
-        # criar erro se nao ha funcionarios cadastrados(excecao)
-
         cursor.execute(lista_funcionarios)
-
-##############################
-
         cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
-
-        
 
         if len(cpf_list) == 0:
             cursor.close()
@@ -180,8 +171,6 @@ class CadastroFuncionario():
 
             for i in range(len(aux)):
                 print("  ", "    ".join(map(str, aux[i])))
-
-#############################
     
         cursor.close()
         cnx.close()
