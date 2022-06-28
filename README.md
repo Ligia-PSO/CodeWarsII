@@ -38,15 +38,22 @@ A organização do cogigo e da base de dados encontras-se representados nas imag
 </p>
 
 ### Codigo
+
+#### Gerar Holerite(cpf)
+Gera o holerite para um funcionario especifico a partir da entrada no mes e da informacao das faltas , desdeque ja nao exista um holerite cadastrado para esse funcionario no mes indicado
 - input
-  ````
-
-  ````
-
+````
+cadastro = CadastroFuncionario()
+cadastro_holerite=CadastroHolerite()
+funcionario = Funcionario('Daiana Santana de Sousa', "11111111100", '2002-04-09', "30", 'Sim')
+cadastro.inserir(funcionario)
+cadastro_holerite.gerar_holerite("11111111100")
+````
 - terminal output
 ````
 informe o mes do holerite(em numero)5
 quantas faltas?2
+
 +----+-------------+-------------------------+-------------+--------------------+-----------------------------+
 |    |   Matricula | Nome                    |         CPF | Data de admissao   | Cargo                       |
 |----+-------------+-------------------------+-------------+--------------------+-----------------------------|

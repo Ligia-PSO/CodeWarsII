@@ -69,13 +69,13 @@ CREATE TABLE IF NOT EXISTS `xpto_alimentos`.`holerite` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('10', 'Cientista de Dados', '10200', '10');
 INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('20', 'Especialista em Business Intelligence', '7000', '8');
 INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('30', 'Desenvolvedor Mobile Sênior', '6700', '7');
 INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('31', 'Desenvolvedor Mobile Pleno', '3550', '6');
 INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('32', 'Desenvolvedor Junior', '3000', '3');
 INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('50', 'Gerente de Projetos', '8900', '8');
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
