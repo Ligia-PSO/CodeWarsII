@@ -1,5 +1,6 @@
 from mysql.connector import connect
-import sys,os
+import sys,os,pandas
+from tabulate import tabulate
 mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 sys.path.append(mypath)
 
@@ -156,7 +157,7 @@ class CadastroFuncionario():
         cursor = cnx.cursor()
 
         lista_funcionarios = (
-            '''SELECT * 
+            '''SELECT CPF 
         FROM xpto_alimentos.funcionario'''
         )
         cursor.execute(lista_funcionarios)
@@ -168,12 +169,21 @@ class CadastroFuncionario():
             raise EmptyDataBaseError("Nao tem funcionarios cadastrados.")
 
         else:
-            aux = cursor.fetchall()
-            print("    ".join(['   Matricula   ', 'Nome         ',
-            'CPF', "Data de admissao", "Cargo id ", "Comissao"]))
+            for cpf in cpf_list:
+                funcionario=self.consultar(cpf)
 
-            for i in range(len(aux)):
-                print("  ", "    ".join(map(str, aux[i])))
+                funcionario_data={
+                    'Matricula':[funcionario.matricula],
+                    'Nome':[funcionario.nome],
+                    'CPF':[funcionario.CPF],
+                    'Data de admissao':[funcionario.data_admissao],
+                    'Cargo':[funcionario.cargo().descricao]
+                        }
+
+                df=pandas.DataFrame(funcionario_data)
+
+                print(tabulate(df, headers='keys', tablefmt='psql'))
+
     
         fecha_conexao(cnx,cursor)
 

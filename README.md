@@ -6,16 +6,19 @@ ___
 
 #### Equipe 10
 
-* Ligia de Oliveira
+* Lígia de Oliveira
 * Marcelo Lopes Valerio
 * William Machado
 * Larissa Chagas
 * Lucas Valença
+  
+<h3 align="left"> Modulos externos usados </h3>
+
 <h2 align="left"> Tabela de conteudo </h2>
 
   - [Definições do Projeto](#Definições-do-Projeto)
   - [Organizaçao Base de Dados](#Organizaçao-Base-de-Dados)
-  
+  - [Codigo](#Codigo)
   
 ### Definições do Projeto
 
@@ -28,7 +31,9 @@ servindo como chave primária para o MySQL
 
 **Para rodar o sistema, primeiramente é necessario gerar a base de dados, rodando o código disponibilizado na pasta SQL, e, após isso, colocar o cadastro do seu SQL na função conectar().**
 
-A organização do cogigo e da base de dados encontras-se representados nas imagens abaixo
+_Inicialmente na base de dados nao existe nenhum funcionario ou holerite cadastrado somente as informações dos cargos disponiveis_ 
+
+A organização do codigo e da base de dados encontras-se representados nas imagens abaixo
 
 <p align="center">
 <a><img src=https://user-images.githubusercontent.com/86573930/176080165-9f4ff77a-ca42-4591-a1a3-0258e90b6631.png  width="400px" ></a>
@@ -40,7 +45,7 @@ A organização do cogigo e da base de dados encontras-se representados nas imag
 ### Codigo
 
 #### Gerar Holerite(cpf)
-Gera o holerite para um funcionario especifico a partir da entrada no mes e da informacao das faltas , desdeque ja nao exista um holerite cadastrado para esse funcionario no mes indicado
+Gera o holerite para um funcionario especifico (identificado pelo cpf) a partir da entrada do mes e da informação das faltas , desdeque ja nao exista um holerite cadastrado para esse funcionario no mes fornecido
 - input
 ````
 cadastro = CadastroFuncionario()
@@ -49,7 +54,7 @@ funcionario = Funcionario('Daiana Santana de Sousa', "11111111100", '2002-04-09'
 cadastro.inserir(funcionario)
 cadastro_holerite.gerar_holerite("11111111100")
 ````
-- terminal output
+-  output terminal
 ````
 informe o mes do holerite(em numero)5
 quantas faltas?2
@@ -78,3 +83,56 @@ quantas faltas?2
 +----+------------------+------------------+---------------+------------------+
 ````
 
+#### Listar Holerites()
+Se, apos rodar a funcao acima, requisitar a geracao da listagem dos holerittes para o mes 5 somente serao listados o holerite para o segundo funcionario fornecido ja que o primeiro ja teve seu holerite feito para aquele mes.
+
+- input
+  ````
+  funcionario2 = Funcionario('Juliano Gomes', '11114311122', '2019-06-17', '32', 'Sim')
+  cadastro.inserir(funcionario2)
+  cadastro_holerite.listar_holerites()
+  ````
+  
+-  output terminal
+````
+informe o mes do holerite(em numero)5
++----+-------------+---------------+-------------+--------------------+----------------------+
+|    |   Matricula | Nome          |         CPF | Data de admissao   | Cargo                |
+|----+-------------+---------------+-------------+--------------------+----------------------|
+|  0 |      100049 | Juliano Gomes | 11114311122 | 2019-06-17         | Desenvolvedor Junior |
++----+-------------+---------------+-------------+--------------------+----------------------+
+==========May/2022========
++----+----------------+--------------+------------+--------------------+
+|    | Descrição      | Referência   | Provento   | Desconto           |
+|----+----------------+--------------+------------+--------------------|
+|  0 | Salário Base   | 22,5         | 3000.0     |                    |
+|  1 | Comissão       | 3.0          | 90.0       |                    |
+|  2 | Faltas         | 0            |            | 0.0                |
+|  3 | INSS Folha     | 0.12         |            | 279.8              |
+|  4 | IRRF Folha     | 0.275        |            | 53.23              |
+|  5 | Total          |              | 3090.0     | 333.03000000000003 |
+|  6 | liq. a receber |              | 2756.97    |                    |
++----+----------------+--------------+------------+--------------------+
++----+------------------+------------------+---------------+------------------+
+|    |   Base calc INSS |   Base calc FGTS |   FGTS do mês |   Base calc IRRF |
+|----+------------------+------------------+---------------+------------------|
+|  0 |             3090 |             3090 |         247.2 |           2810.2 |
++----+------------------+------------------+---------------+------------------+
+````
+
+#### Listar_Funcionarios()
+
+Lista os funcionarios presentes na base de dados 
+
+````
++----+-------------+-------------------------+-------------+--------------------+-----------------------------+
+|    |   Matricula | Nome                    |         CPF | Data de admissao   | Cargo                       |
+|----+-------------+-------------------------+-------------+--------------------+-----------------------------|
+|  0 |      100047 | Daiana Santana de Sousa | 11111111100 | 2002-04-09         | Desenvolvedor Mobile Sênior |
++----+-------------+-------------------------+-------------+--------------------+-----------------------------+
++----+-------------+---------------+-------------+--------------------+----------------------+
+|    |   Matricula | Nome          |         CPF | Data de admissao   | Cargo                |
+|----+-------------+---------------+-------------+--------------------+----------------------|
+|  0 |      100049 | Juliano Gomes | 11114311122 | 2019-06-17         | Desenvolvedor Junior |
++----+-------------+---------------+-------------+--------------------+----------------------+
+````

@@ -14,6 +14,7 @@ from src.business.cadastro_funcionario import CadastroFuncionario
 from src.business.access_data_base import conectar, fecha_conexao
 from src.exception.base_funcionario_error import EmptyDataBaseError
 from src.business.bases_salariais import INSS, IRRF
+from src.exception.field_error import InvalidFieldError
 
 class CadastroHolerite():
 
