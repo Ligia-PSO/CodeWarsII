@@ -14,6 +14,10 @@ ___
   
 <h3 align="left"> Modulos externos usados </h3>
 
+* tabulate
+* pandas
+* mysql
+
 <h2 align="left"> Tabela de conteudo </h2>
 
   - [Definições do Projeto](#Definições-do-Projeto)
