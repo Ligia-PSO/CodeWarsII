@@ -1,0 +1,18 @@
+
+INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('10', 'Cientista de Dados', '10200', '10');
+INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('20', 'Especialista em Business Intelligence', '7000', '8');
+INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('30', 'Desenvolvedor Mobile Sênior', '6700', '7');
+INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('31', 'Desenvolvedor Mobile Pleno', '3550', '6');
+INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('32', 'Desenvolvedor Junior', '3000', '3');
+INSERT INTO cargo (id,descricao,salario_base,comissao ) VALUES ('50', 'Gerente de Projetos', '8900', '8');
+
+INSERT INTO funcionario (nome,CPF,data_admissao,cargo_id,comissao ) VALUES ( 'Ana Maria Silva', '11111111100', '2019-02-07', '32', 'Sim');
+INSERT INTO funcionario (nome,CPF,data_admissao,cargo_id,comissao ) VALUES ( 'Bernardo Santos', '22222222200', '2017-10-16', '20', 'Nao');
+INSERT INTO funcionario (nome,CPF,data_admissao,cargo_id,comissao ) VALUES ( 'Daiana Santana de Sousa', '33333333300', '2002-04-09', '30', 'Sim');
+INSERT INTO funcionario (nome,CPF,data_admissao,cargo_id,comissao ) VALUES ( 'Felipe Cruz', '44444444400', '2021-06-28', '31', 'Sim');
+INSERT INTO funcionario (nome,CPF,data_admissao,cargo_id,comissao ) VALUES ( 'Daniel Ferreira', '55555555600', '2012-10-1', '21', 'Nao');
+INSERT INTO funcionario (nome,CPF,data_admissao,cargo_id,comissao ) VALUES ('Joana Silveira Pacheco', '66666666600', '2009-08-14', '50', 'Sim');
+
+INSERT INTO holerite (funcionario_CPF,mes,faltas ) VALUES ('22222222200', '3', '2');
+INSERT INTO holerite (funcionario_CPF,mes,faltas ) VALUES ('22222222200', '2019-02-07', '2');
+INSERT INTO holerite (funcionario_CPF,mes) VALUES ('11111111100', '2');

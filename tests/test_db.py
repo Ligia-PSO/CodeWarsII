@@ -1,11 +1,14 @@
 from mysql.connector import errorcode,connect,Error
 import pytest
+import os,sys
+mypath=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(mypath)
+
+from src.business.access_data_base import conectar, fecha_conexao
 
 def test_connect_to_database():
   try:
-    cnx = connect(user='root', password='throwaway11',
-                                host='127.0.0.1',
-                                database='xpto_alimentos')
+    cnx = conectar()
     connected=True
   except Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -18,4 +21,5 @@ def test_connect_to_database():
   else:
     connected=True
   cnx.close()
+  
   assert connected==True  

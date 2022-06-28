@@ -1,24 +1,24 @@
 #==================external modules=====================
 import pandas
 from tabulate import tabulate
-
 import calendar
-import mysql.connector
-import sys
-sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
+
+import os,sys
+mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+sys.path.append(mypath)
+
 from mysql.connector.errors import IntegrityError,DatabaseError
-from src.entities.bases_salariais import INSS, IRRF
 from src.entities.holerites import Holerite
 from src.business.cadastro_funcionario import CadastroFuncionario
-from src.entities.funcionario import Funcionario
+from src.business.access_data_base import conectar, fecha_conexao
+from src.exception.base_funcionario_error import EmptyDataBaseError
 
 class CadastroHolerite():
 
-    def todos_holerites(self):
+    def listar_holerites(self):
 
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
-                              host='127.0.0.1',
-                              database='xpto_alimentos')
+        cnx = conectar()
+
         cursor = cnx.cursor()
 
         query=("""SELECT CPF FROM funcionario 
@@ -26,9 +26,12 @@ class CadastroHolerite():
 
     
         mes_referencia=int(input('informe o mes do holerite(em numero)'))
-
         cursor.execute(query, (mes_referencia,))
+        
         cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
+
+        if cpf_list == []:
+            raise EmptyDataBaseError('Não há CPFs cadastrados na base de dados.')
         
         cursor.close()
 
@@ -61,23 +64,28 @@ class CadastroHolerite():
 
             cursor.close()
 
-        cnx.close()
+        fecha_conexao(cnx,cursor)
+
         pass
 
     def gerar_holerite(self,cpf:str):
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
-                              host='127.0.0.1',
-                              database='xpto_alimentos')
+
+        cnx = conectar()
                               
         cursor = cnx.cursor(buffered=True)
 
         funcionario=CadastroFuncionario().consultar(cpf)
 
         mes_referencia=int(input('informe o mes do holerite(em numero)'))
-        faltas=int(input('quantas faltas?'))
         
-        holerite=Holerite(cpf,mes_referencia,faltas)
+        if not 0<mes_referencia<13: 
+            cursor.close()
+            cnx.close()
+            raise InvalidFieldError(f"mes {calendar.month_name[mes_referencia]} nao é valido")
 
+        faltas=int(input('quantas faltas?'))
+        holerite=Holerite(cpf,mes_referencia,faltas)
+        
         (inss, irrf, FGTS_do_mes, a_receber) = print_holerite(holerite)
         
 
@@ -105,15 +113,9 @@ class CadastroHolerite():
             cursor.close()
             cnx.close()
             exit()
-        except DatabaseError:
-            print(f"mes {calendar.month_name[mes_referencia]} nao é valido")
-            cursor.close()
-            cnx.close()
-            exit()
-
-
-        cursor.close()
-        cnx.close()
+        
+            
+        fecha_conexao(cnx,cursor)
         pass
 
         
@@ -127,8 +129,8 @@ def print_holerite(holerite:Holerite):
     else:
         comissao=0
 
-    inss,aliquota_inss = INSS(funcionario)
-    irrf,aliquota_irrf = IRRF(funcionario)
+    inss,aliquota_inss = CalculoFiscal.INSS(funcionario)
+    irrf,aliquota_irrf = CalculoFiscal.IRRF(funcionario)
     valor_comissao = comissao *  salario_base/100
     Base_calc_INSS = salario_base + valor_comissao
     desconto_faltas = salario_base/30*holerite.faltas
@@ -173,3 +175,4 @@ def print_holerite(holerite:Holerite):
     print(tabulate(df3, headers='keys', tablefmt='psql'))
 
     return (inss, irrf, FGTS_do_mes, a_receber)
+    

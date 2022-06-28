@@ -1,9 +1,11 @@
-import sys
-sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
+import sys,os
+mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+sys.path.append(mypath)
 from src.entities.funcionario import Funcionario
 
 def INSS(funcionario:Funcionario)->float:
-    salario=funcionario.cargo().salario_base
+    salario_b=funcionario.cargo().salario_base
+    salario=salario_b*(1+funcionario.cargo().comissao/100)
 
     faixas_INSS={(0,1212):0.075,
                     (1212.01,2427.35):0.09,
@@ -41,5 +43,3 @@ def IRRF(funcionario:Funcionario)->float:
     
     return round(imposto,2),aliquota
 
-funcionario = Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "32", "Sim")
-print(IRRF(funcionario))

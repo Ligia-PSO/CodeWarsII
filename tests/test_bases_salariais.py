@@ -1,8 +1,8 @@
-import sys
-import unittest
+import sys,os,unittest
 from unittest import main,TestCase
-sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
-from src.entities.bases_salariais import INSS, IRRF
+mypath=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(mypath)
+from src.business.bases_salariais import INSS, IRRF
 from src.entities.funcionario import Funcionario
 
 
@@ -10,19 +10,19 @@ class TestCalculoINSS(TestCase):
 
     def test_INSS_faixa3(self):
         funcionario = Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "32", "Sim")
-        self.assertEqual((269.00, 0.12),INSS(funcionario))
+        self.assertEqual((279.8, 0.12),INSS(funcionario))
 
     def test_IRRF_faixa3(self):
-        funcionario= Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "32", "Sim")
-        self.assertEqual((54.85, 0.275), IRRF(funcionario))
+        funcionario= Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "32", "Nao")
+        self.assertEqual((53.23, 0.275), IRRF(funcionario))
 
     def test_INSS_faixa4(self):
         funcionario= Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "20", "Sim")
-        self.assertEqual((816.18, 0.14),INSS(funcionario))
+        self.assertEqual((828.39, 0.14),INSS(funcionario))
 
     def test_IRRF_faixa4(self):
-        funcionario = Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "20", "Sim")
-        self.assertEqual((831.19, 0.275), IRRF(funcionario))
+        funcionario = Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "20", "Nao")
+        self.assertEqual((827.83, 0.275), IRRF(funcionario))
    
     def test_INSS_faixa5(self):
         funcionario= Funcionario("Ana Maria Silva", "11111111100", "2019-02-07", "10", "Sim")
@@ -34,3 +34,4 @@ class TestCalculoINSS(TestCase):
 
 if __name__=='__main__':
     unittest.main()
+    

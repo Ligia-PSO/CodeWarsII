@@ -1,9 +1,10 @@
-class DataBaseError(Exception):
+
+class InvalidFieldError(Exception):
+
     def __init__(self, *args: object) -> None:
-        self.mensagem = args[0]
         super().__init__(*args)
 
-class EmptyDataBaseError(DataBaseError):
+class EmptyFieldError(InvalidFieldError):
+
     def __init__(self, *args: object) -> None:
-        self.mensagem = args[0]
         super().__init__(*args)

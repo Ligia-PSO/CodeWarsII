@@ -1,10 +1,17 @@
 from mysql.connector import connect
-import sys
-sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
+import sys,os
+mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+sys.path.append(mypath)
+
+from src.exception.base_funcionario_error import EmptyDataBaseError
+from src.exception.field_error import EmptyFieldError, InvalidFieldError
+from src.exception.duplicated_cpf_error import DuplicatedCPF
+from src.business.access_data_base import conectar, fecha_conexao
 from src.entities.funcionario import Funcionario
+sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
+
 from src.exception.funcionario_not_found import FuncionarioNotFoundError
 from mysql.connector.errors import IntegrityError,DatabaseError
-from src.business.conectar_SQL import Conectar_SQL
 
 class CadastroFuncionario():
 
@@ -13,9 +20,7 @@ class CadastroFuncionario():
                                'data_admissao', 'cargo_id', 'comissao']
 
     def inserir(self, funcionario: Funcionario):
-        cnx = connect(user='root', password='throwaway11',
-                                      host='127.0.0.1',
-                                      database='xpto_alimentos')
+        cnx = conectar()
 
         cursor = cnx.cursor()
 
@@ -35,26 +40,29 @@ class CadastroFuncionario():
 
         campos_info=[i for i in dados.values()]
 
-       
 
         try:
             cursor.execute(adiciona_funcionario, dados)
 
         except IntegrityError:
-            print("CPF já cadastrado")
+            if int(funcionario.cargo_id) not in [10, 20, 30, 31, 32, 50]:
+                raise InvalidFieldError("Id do cargo invalido.")
+            else:
+                raise DuplicatedCPF("CPF já cadastrado")
+                
         except DatabaseError:
             if '' in campos_info or None in campos_info:
-                print('Campo do funcionario nao pode ser nulo ou vazio')
-            print('Formatacao de campo incorreta vazia nula ou tamanho errado')
+                raise EmptyFieldError('Campo do funcionario nao pode ser nulo ou vazio')
+            else:
+                raise InvalidFieldError('Dado de campo invalido')
 
-        cnx.commit()
-        cursor.close()
-        cnx.close()
+
+        fecha_conexao(cnx,cursor)
 
     def consultar(self, cpf: str) -> Funcionario:
-        cnx = connect(user='root', password='throwaway11',
-                                      host='127.0.0.1',
-                                      database='xpto_alimentos')
+
+        cnx = conectar()
+
         cursor = cnx.cursor()
         query = (
             '''SELECT  CPF FROM xpto_alimentos.funcionario ''')
@@ -77,15 +85,14 @@ class CadastroFuncionario():
             cnx.close()
             raise FuncionarioNotFoundError("CPF não encontrado.")
 
-        cursor.close()
-        cnx.close()
+        fecha_conexao(cnx,cursor)
 
         return funcionario
 
     def excluir(self, cpf: str) -> None:
-        cnx = connect(user='root', password='throwaway11',
-                                      host='127.0.0.1',
-                                      database='xpto_alimentos')
+
+        cnx = conectar()
+
         cursor = cnx.cursor()
 
         deleta_funcionario = (
@@ -103,14 +110,12 @@ class CadastroFuncionario():
             cnx.close()
             raise FuncionarioNotFoundError("CPF não encontrado.")
 
-        cnx.commit()
-        cursor.close()
-        cnx.close()
+        fecha_conexao(cnx,cursor)
 
     def alterar_cadastro(self, cpf: str) -> None:
-        cnx = connect(user='root', password='throwaway11',
-                                      host='127.0.0.1',
-                                      database='xpto_alimentos')
+
+        cnx = conectar()
+
         cursor = cnx.cursor()
 
         # Listagem de cpf no database
@@ -142,14 +147,12 @@ class CadastroFuncionario():
             raise FuncionarioNotFoundError("CPF não encontrado.")
 
 
-        cursor.close()
-        cnx.close()
+        fecha_conexao(cnx,cursor)
 
-    def listar_todos(self) -> list:
+    def listar_funcionarios(self) -> list:
 
-        cnx = connect(user='root', password='throwaway11',
-                                      host='127.0.0.1',
-                                      database='xpto_alimentos')
+        cnx = conectar()
+        
         cursor = cnx.cursor()
 
         lista_funcionarios = (
@@ -159,10 +162,10 @@ class CadastroFuncionario():
         cursor.execute(lista_funcionarios)
         cpf_list = list(map(lambda x: x[0], cursor.fetchall()))
 
-        if len(cpf_list) == 0:
+        if cpf_list== []:
             cursor.close()
             cnx.close()
-            raise FuncionarioNotFoundError("Nao tem funcionarios cadastrados.")
+            raise EmptyDataBaseError("Nao tem funcionarios cadastrados.")
 
         else:
             aux = cursor.fetchall()
@@ -172,6 +175,6 @@ class CadastroFuncionario():
             for i in range(len(aux)):
                 print("  ", "    ".join(map(str, aux[i])))
     
-        cursor.close()
-        cnx.close()
+        fecha_conexao(cnx,cursor)
+
         return aux

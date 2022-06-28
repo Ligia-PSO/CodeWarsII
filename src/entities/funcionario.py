@@ -1,5 +1,8 @@
+import os,sys
+mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+sys.path.append(mypath)
 from src.entities.cargo import Cargo
-import mysql.connector
+from src.business.access_data_base import conectar, fecha_conexao
 
 
 class Funcionario():
@@ -39,9 +42,7 @@ class Funcionario():
         '''
         Retorna a classe cargo associada ao id de dargo do funcionario
         '''
-        cnx = mysql.connector.connect(user='root', password='throwaway11',
-                                      host='127.0.0.1',
-                                      database='xpto_alimentos')
+        cnx = conectar()
 
         cursor = cnx.cursor()
 
@@ -55,6 +56,5 @@ class Funcionario():
         for (codigo, descricao, salario_base, comissao) in cursor:
             cargo = Cargo(codigo, descricao, salario_base, comissao)
 
-        cursor.close()
-        cnx.close()
+        fecha_conexao(cnx,cursor)
         return cargo

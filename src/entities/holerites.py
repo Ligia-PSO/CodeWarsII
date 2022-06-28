@@ -1,4 +1,8 @@
-from src.entities.bases_salariais import INSS, IRRF
+import os,sys
+mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+sys.path.append(mypath)
+print(mypath)
+from src.business.bases_salariais import INSS, IRRF
 from src.business.cadastro_funcionario import CadastroFuncionario
 from src.entities.funcionario import Funcionario
 
@@ -11,8 +15,6 @@ class Holerite():
         # -----------Gerado consultando base de dados e por calculo----------
         self.__comissao: float = self.funcionario().cargo().comissao
         self.__salario_base: float = self.funcionario().cargo().salario_base
-        # self.__inss = INSS(self.funcionario())[0]
-        # self.__irrf = IRRF(self.funcionario())[0]
 
     def funcionario(self) -> Funcionario:
         cadastro = CadastroFuncionario()
@@ -38,3 +40,4 @@ class Holerite():
     @property
     def cpf(self) -> float:
         return self.__cpf
+    
