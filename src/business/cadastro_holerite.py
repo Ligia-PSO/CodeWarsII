@@ -4,6 +4,7 @@ from tabulate import tabulate
 import calendar
 
 import os,sys
+
 mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 sys.path.append(mypath)
 
@@ -12,6 +13,7 @@ from src.entities.holerites import Holerite
 from src.business.cadastro_funcionario import CadastroFuncionario
 from src.business.access_data_base import conectar, fecha_conexao
 from src.exception.base_funcionario_error import EmptyDataBaseError
+from src.business.bases_salariais import INSS, IRRF
 
 class CadastroHolerite():
 
@@ -129,8 +131,8 @@ def print_holerite(holerite:Holerite):
     else:
         comissao=0
 
-    inss,aliquota_inss = CalculoFiscal.INSS(funcionario)
-    irrf,aliquota_irrf = CalculoFiscal.IRRF(funcionario)
+    inss,aliquota_inss = INSS(funcionario)
+    irrf,aliquota_irrf = IRRF(funcionario)
     valor_comissao = comissao *  salario_base/100
     Base_calc_INSS = salario_base + valor_comissao
     desconto_faltas = salario_base/30*holerite.faltas
