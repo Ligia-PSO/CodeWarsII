@@ -26,6 +26,4 @@ funcionario = Funcionario('Juliano Gomes', '11114311122', '2019-06-17', '32', 'S
 # cadastro.excluir('11114311122')
 # cadastro.alterar_cadastro("11111111122")
 
-# ----------------------TEST  listar-----------------OK
-cadastro.listar_funcionarios()
 

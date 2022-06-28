@@ -71,6 +71,18 @@ class TestCadastroFuncionario(TestCase):
 
         self.assertEqual("11111111100", resultado.CPF)
 
+    def test_cadastro_listar_funcionarios(self):
+        funcionario1 = Funcionario(
+            "Ana Maria Silva", "11111111100", "2019-02-07", "32", "Sim")
+        funcionario2 = Funcionario(
+            'Bernardo Santos', '22222222200', '2017-10-16', '20', 'Nao')
+
+        self.cadastro.inserir(funcionario1)
+        self.cadastro.inserir(funcionario2)
+        resultado=self.cadastro.listar_funcionarios()
+        
+        self.assertEqual(('Ana Maria Silva','Bernardo Santos'),(resultado[0].nome,resultado[1].nome))
+
     def test_cadastro_consultar_error(self):
         with self.assertRaises(FuncionarioNotFoundError):
             self.cadastro.consultar("11111111100")

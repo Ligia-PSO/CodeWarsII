@@ -169,22 +169,25 @@ class CadastroFuncionario():
             raise EmptyDataBaseError("Nao tem funcionarios cadastrados.")
 
         else:
+            funcionarios_list=[]
             for cpf in cpf_list:
                 funcionario=self.consultar(cpf)
 
-                funcionario_data={
-                    'Matricula':[funcionario.matricula],
-                    'Nome':[funcionario.nome],
-                    'CPF':[funcionario.CPF],
-                    'Data de admissao':[funcionario.data_admissao],
-                    'Cargo':[funcionario.cargo().descricao]
+                funcionarios_list.append(funcionario)
+
+            funcionario_data={
+                    'Matricula':[f.matricula for f in funcionarios_list],
+                    'Nome':[f.nome for f in funcionarios_list],
+                    'CPF':[f.CPF for f in funcionarios_list],
+                    'Data de admissao':[f.data_admissao for f in funcionarios_list],
+                    'Cargo':[f.cargo().descricao for f in funcionarios_list]
                         }
 
-                df=pandas.DataFrame(funcionario_data)
+            df=pandas.DataFrame(funcionario_data)
 
-                print(tabulate(df, headers='keys', tablefmt='psql'))
+            print(tabulate(df, headers='keys', tablefmt='psql'))
 
     
         fecha_conexao(cnx,cursor)
 
-        return aux
+        return funcionarios_list
