@@ -1,10 +1,7 @@
-from mysql.connector import errorcode,connect,Error
-import pytest
-import os,sys
-mypath=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(mypath)
+from mysql.connector import errorcode,Error
 
-from src.business.access_data_base import conectar, fecha_conexao
+
+from src.business.access_data_base import conectar
 
 def test_connect_to_database():
   try:

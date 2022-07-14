@@ -21,7 +21,7 @@ ___
 <h2 align="left"> Tabela de conteudo </h2>
 
   - [Definições do Projeto](#Definições-do-Projeto)
-  - [Organizaçao Base de Dados](#Organizaçao-Base-de-Dados)
+  - [Base de Dados](#Base-de-Dados)
   - [Codigo](#Codigo)
   
 ### Definições do Projeto

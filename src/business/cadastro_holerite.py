@@ -3,11 +3,6 @@ import pandas
 from tabulate import tabulate
 import calendar
 
-import os,sys
-
-mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-sys.path.append(mypath)
-
 from mysql.connector.errors import IntegrityError,DatabaseError
 from src.entities.holerites import Holerite
 from src.business.cadastro_funcionario import CadastroFuncionario

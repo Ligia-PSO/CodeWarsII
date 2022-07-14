@@ -1,6 +1,4 @@
-import sys,os
-mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-sys.path.append(mypath)
+
 from src.entities.funcionario import Funcionario
 
 def INSS(funcionario:Funcionario)->float:

@@ -1,6 +1,4 @@
-import os,sys
-mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-sys.path.append(mypath)
+
 from src.entities.cargo import Cargo
 from src.business.access_data_base import conectar, fecha_conexao
 

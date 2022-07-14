@@ -1,15 +1,13 @@
 from mysql.connector import connect
-import sys,os,pandas
+import pandas
 from tabulate import tabulate
-mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-sys.path.append(mypath)
+
 
 from src.exception.base_funcionario_error import EmptyDataBaseError
 from src.exception.field_error import EmptyFieldError, InvalidFieldError
 from src.exception.duplicated_cpf_error import DuplicatedCPF
 from src.business.access_data_base import conectar, fecha_conexao
 from src.entities.funcionario import Funcionario
-sys.path.append(r"C:\Users\ligia\Documents\autoensino\Coding\CodeWarsII")
 
 from src.exception.funcionario_not_found import FuncionarioNotFoundError
 from mysql.connector.errors import IntegrityError,DatabaseError

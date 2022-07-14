@@ -1,7 +1,4 @@
-import os,sys
-mypath=os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-sys.path.append(mypath)
-print(mypath)
+
 from src.business.bases_salariais import INSS, IRRF
 from src.business.cadastro_funcionario import CadastroFuncionario
 from src.entities.funcionario import Funcionario

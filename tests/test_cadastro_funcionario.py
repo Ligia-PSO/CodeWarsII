@@ -1,7 +1,5 @@
 import sys,os,unittest
-from unittest import main, TestCase
-mypath=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(mypath)
+from unittest import  TestCase
 
 from src.business.access_data_base import conectar, fecha_conexao
 from src.exception.duplicated_cpf_error import DuplicatedCPF
